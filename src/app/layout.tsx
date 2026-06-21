@@ -11,7 +11,7 @@ const hindSiliguri = Hind_Siliguri({
 
 export const metadata: Metadata = {
   title: "মিঃ পান্ডা",
-  description: "অনলাইনে খাবার অর্ডার করুন",
+  description: "সুস্বাদু খাবার অর্ডার করুন ঘরে বসেই",
 };
 
 export default function RootLayout({
