@@ -4,7 +4,7 @@ import "./globals.css";
 
 const hindSiliguri = Hind_Siliguri({
   subsets: ["bengali"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
   variable: "--font-hind-siliguri",
   display: "swap",
 });

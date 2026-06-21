@@ -1,4 +1,5 @@
 import Navbar from "@/components/shared/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function CommonLayout({
   children,
@@ -9,6 +10,16 @@ export default function CommonLayout({
     <>
       <Navbar />
       <main>{children}</main>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: "var(--color-primary)",
+            color: "var(--color-primary-foreground)",
+            border: "none",
+          },
+        }}
+      />
     </>
   );
 }
