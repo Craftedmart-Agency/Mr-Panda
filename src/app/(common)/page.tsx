@@ -11,7 +11,6 @@ export default function HomePage() {
       <SpecialFood />
       <WelcomeSection/>
       <ExpertChef />
-      <HappyCustomers />
     </>
   );
 }
