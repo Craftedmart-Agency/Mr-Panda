@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@theme {
+  /* Bangla Font */
+  --font-bangla: var(--font-hind-siliguri), sans-serif;
+
+  /* Pink Theme Colors */
+  --color-background: #ffffff;
+  --color-foreground: #1a1a1a;
+
+  --color-primary: #ec4899;
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #fce7f3;
+  --color-secondary-foreground: #831843;
+
+  --color-accent: #fbcfe8;
+  --color-accent-foreground: #831843;
+
+  --color-muted: #f9fafb;
+  --color-muted-foreground: #6b7280;
+
+  --color-border: #f3d4e4;
+  --color-input: #f3d4e4;
+  --color-ring: #ec4899;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1a1a;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --radius: 0.75rem;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
