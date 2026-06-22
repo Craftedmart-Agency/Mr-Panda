@@ -108,6 +108,7 @@ export default function HeroBanner() {
           </div>
 
           {/* RIGHT IMAGE — mobile e AGE (order-1), desktop e pore (order-2) */}
+          {/* RIGHT IMAGE — mobile e AGE (order-1), desktop e pore (order-2) */}
           <div className="order-1 flex justify-center sm:order-2 sm:justify-end">
             <div className="relative flex aspect-square w-full max-w-[240px] items-center justify-center sm:max-w-[280px] md:max-w-[400px] lg:max-w-[480px] xl:max-w-[560px]">
               {/* Glow */}
@@ -121,10 +122,11 @@ export default function HeroBanner() {
                 <Image
                   src="/hero.png"
                   alt="সুস্বাদু এশিয়ান খাবার"
-                  fill
+                  width={600}
+                  height={600}
                   priority
                   sizes="(max-width:640px) 200px, (max-width:768px) 240px, (max-width:1024px) 340px, 480px"
-                  className="object-contain drop-shadow-[0_20px_60px_rgba(236,72,153,.35)]"
+                  className="h-full w-full object-contain drop-shadow-[0_20px_60px_rgba(236,72,153,.35)]"
                 />
               </div>
             </div>
