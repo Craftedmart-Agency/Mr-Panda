@@ -1,3 +1,5 @@
+import { AuthProvider } from "../lib/firebase/AuthProvider";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
@@ -22,7 +24,19 @@ export default function RootLayout({
   return (
     <html lang="bn">
       <body className={`${hindSiliguri.variable} font-bangla antialiased`}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: "var(--color-primary)",
+              color: "var(--color-primary-foreground)",
+              border: "none",
+            },
+          }}
+        />
       </body>
     </html>
   );
