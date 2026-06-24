@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -10,6 +11,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/lib/firebase/AuthProvider";
+import { useProfile } from "@/lib/ProfileContext";
 import { logout } from "@/lib/firebase/auth";
 import { toast } from "sonner";
 
@@ -24,6 +26,7 @@ export default function AccountSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useAuth();
+  const { profileImage } = useProfile();
 
   const handleLogout = async () => {
     try {
@@ -42,8 +45,18 @@ export default function AccountSidebar() {
         <div className="flex h-full flex-col rounded-3xl border border-border bg-card shadow-sm">
           {/* Header — user image + name */}
           <div className="flex flex-col items-center border-b border-border px-6 py-8 text-center">
-            <div className="flex aspect-square size-16 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-lg shadow-primary/25">
-              {user?.displayName?.charAt(0).toUpperCase() || "U"}
+            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-lg shadow-primary/25">
+              {profileImage ? (
+                <Image
+                  src={profileImage}
+                  alt={user?.displayName || "User"}
+                  width={64}
+                  height={64}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                user?.displayName?.charAt(0).toUpperCase() || "U"
+              )}
             </div>
             <p className="mt-3 text-sm font-bold text-foreground">
               {user?.displayName || "ইউজার"}
