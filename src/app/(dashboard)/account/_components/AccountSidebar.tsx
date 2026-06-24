@@ -18,7 +18,7 @@ import { toast } from "sonner";
 const menuItems = [
   { label: "ওভারভিউ", href: "/account", icon: LayoutDashboard },
   { label: "আমার অর্ডার", href: "/account/orders", icon: ShoppingBag },
-  { label: "আমার কার্ট", href: "/cart", icon: ShoppingCart },
+  { label: "আমার কার্ট", href: "/account/cart", icon: ShoppingCart },
   { label: "প্রোফাইল", href: "/account/profile", icon: User },
 ];
 

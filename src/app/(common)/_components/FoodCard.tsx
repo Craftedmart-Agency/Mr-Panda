@@ -1,68 +1,59 @@
 "use client";
 
 import Image from "next/image";
-import { ShoppingCart, UtensilsCrossed } from "lucide-react";
+import { Plus } from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 
 interface FoodCardProps {
+  id: string;
   name: string;
-  description: string;
   price: number;
   imageUrl: string;
+  description?: string;
 }
 
 export default function FoodCard({
+  id,
   name,
-  description,
   price,
   imageUrl,
+  description,
 }: FoodCardProps) {
+  const addItem = useCartStore((state) => state.addItem);
+
   const handleAddToCart = () => {
+    addItem({ id, name, price, imageUrl });
     toast.success(`${name} কার্টে যোগ হয়েছে!`);
   };
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-3xl bg-card shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
-      {/* Image */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+    <div className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:shadow-md">
+      <div className="relative aspect-square overflow-hidden">
         <Image
           src={imageUrl}
           alt={name}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          className="object-cover transition-transform group-hover:scale-105"
         />
-
-        {/* Add to cart — top right */}
-        <button
-          onClick={handleAddToCart}
-          aria-label="কার্টে যোগ করুন"
-          className="absolute right-4 top-4 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-card/95 text-primary shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-primary hover:text-primary-foreground active:scale-95"
-        >
-          <ShoppingCart className="h-5 w-5" />
-        </button>
       </div>
-
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-5">
-        {/* Name + Price */}
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-lg font-bold text-foreground">{name}</h3>
-          <span className="whitespace-nowrap text-lg font-bold text-primary">
-            ৳{price}
-          </span>
+      <div className="p-4">
+        <h3 className="font-bold text-foreground">{name}</h3>
+        {description && (
+          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+            {description}
+          </p>
+        )}
+        <div className="mt-3 flex items-center justify-between">
+          <span className="text-lg font-bold text-primary">৳{price}</span>
+          <button
+            onClick={handleAddToCart}
+            className="flex cursor-pointer items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+          >
+            <Plus className="h-4 w-4" />
+            যোগ করুন
+          </button>
         </div>
-
-        {/* Description */}
-        <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-          {description}
-        </p>
-
-        {/* Order now button */}
-        <button className="mt-5 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:opacity-90 hover:shadow-xl hover:shadow-primary/40 active:scale-95">
-          অর্ডার করুন
-          <UtensilsCrossed className="h-4 w-4" />
-        </button>
       </div>
     </div>
   );
