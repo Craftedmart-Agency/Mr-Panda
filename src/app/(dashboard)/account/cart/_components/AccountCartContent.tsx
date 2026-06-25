@@ -51,9 +51,9 @@ export default function AccountCartContent() {
         <>
           {/* Items */}
           <div className="space-y-3">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <div
-                key={item.id}
+                key={`${item.id}-${index}`}
                 className="flex gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm"
               >
                 <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl">
