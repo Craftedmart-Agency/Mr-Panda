@@ -1,8 +1,9 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { auth } from "./config";
+import { toast } from "sonner";
 
 interface AuthContextType {
   user: User | null;
@@ -20,8 +21,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
+      if (!firebaseUser) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      const checkBan = async () => {
+        try {
+          const res = await fetch(`/api/users/me?firebaseUid=${firebaseUser.uid}`);
+          const data = await res.json();
+
+          if (res.ok && data.user?.isBanned) {
+            await signOut(auth);
+            setUser(null);
+          } else {
+            setUser(firebaseUser);
+          }
+        } catch {
+          setUser(firebaseUser);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      checkBan();
     });
     return () => unsubscribe();
   }, []);
