@@ -52,9 +52,9 @@ export default function CartContent() {
       <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Items */}
         <div className="space-y-4 lg:col-span-2">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <div
-              key={item.id}
+              key={`${item.id}-${index}`}
               className="flex gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm"
             >
               <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl">

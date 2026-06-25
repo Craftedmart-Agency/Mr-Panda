@@ -75,11 +75,11 @@ model Order {
 }
 
 model OrderItem {
-  id       String @id @default(cuid())
+  id       String  @id @default(cuid())
   orderId  String
-  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  foodId   String
-  food     Food   @relation(fields: [foodId], references: [id])
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  foodId   String?
+  food     Food?   @relation(fields: [foodId], references: [id])
   foodName String
   price    Float
   quantity Int
