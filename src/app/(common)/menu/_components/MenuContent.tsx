@@ -104,6 +104,7 @@ FilterPanel.displayName = "FilterPanel";
 
 const allFoods = [
   {
+    id: "salad-001",
     name: "স্পেশাল সালাদ",
     description: "তাজা সবজি আর বিশেষ ড্রেসিং দিয়ে তৈরি স্বাস্থ্যকর সালাদ।",
     price: 250,
@@ -111,6 +112,7 @@ const allFoods = [
     category: "সালাদ",
   },
   {
+    id: "salad-002",
     name: "রাশিয়ান সালাদ",
     description: "ক্রিমি টেক্সচার আর মুখরোচক স্বাদের রাশিয়ান সালাদ।",
     price: 300,
@@ -118,6 +120,7 @@ const allFoods = [
     category: "সালাদ",
   },
   {
+    id: "burger-001",
     name: "চিজ বার্গার",
     description: "জুসি বিফ প্যাটি, চিজ আর তাজা সবজি দিয়ে তৈরি বার্গার।",
     price: 350,
@@ -125,6 +128,7 @@ const allFoods = [
     category: "বার্গার",
   },
   {
+    id: "burger-002",
     name: "চিকেন বার্গার",
     description: "ক্রিস্পি চিকেন ফিলে আর স্পেশাল সস দিয়ে তৈরি বার্গার।",
     price: 320,
@@ -132,6 +136,7 @@ const allFoods = [
     category: "বার্গার",
   },
   {
+    id: "pizza-001",
     name: "মার্গারিটা পিৎজা",
     description: "ক্লাসিক টমেটো সস, মোজারেলা চিজ আর তুলসি পাতার পিৎজা।",
     price: 550,
@@ -139,6 +144,7 @@ const allFoods = [
     category: "পিৎজা",
   },
   {
+    id: "pizza-002",
     name: "পেপারোনি পিৎজা",
     description: "স্পাইসি পেপারোনি আর এক্সট্রা চিজে ভরা মজাদার পিৎজা।",
     price: 600,
@@ -146,6 +152,7 @@ const allFoods = [
     category: "পিৎজা",
   },
   {
+    id: "pasta-001",
     name: "হোয়াইট সস পাস্তা",
     description: "ক্রিমি হোয়াইট সসে রান্না করা মুখরোচক ইতালিয়ান পাস্তা।",
     price: 400,
@@ -153,6 +160,7 @@ const allFoods = [
     category: "পাস্তা",
   },
   {
+    id: "drink-001",
     name: "লেমন মিন্ট",
     description: "তাজা লেবু আর পুদিনা পাতার রিফ্রেশিং ঠান্ডা পানীয়।",
     price: 120,
@@ -234,7 +242,7 @@ export default function MenuContent() {
           {filteredFoods.length > 0 ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {filteredFoods.map((food) => (
-                <FoodCard key={food.name} {...food} />
+                <FoodCard key={food.id} {...food} />
               ))}
             </div>
           ) : (

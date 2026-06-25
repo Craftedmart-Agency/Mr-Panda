@@ -2,24 +2,28 @@ import FoodCard from "./FoodCard";
 
 const foods = [
   {
+    id: "1",
     name: "স্পেশাল সালাদ",
     description: "তাজা সবজি আর বিশেষ ড্রেসিং দিয়ে তৈরি স্বাস্থ্যকর সালাদ।",
     price: 250,
     imageUrl: "/hero.png",
   },
   {
+    id: "2",
     name: "রাশিয়ান সালাদ",
     description: "ক্রিমি টেক্সচার আর মুখরোচক স্বাদের রাশিয়ান সালাদ।",
     price: 300,
     imageUrl: "/hero.png",
   },
   {
+    id: "3",
     name: "এশিয়ান সালাদ",
     description: "এশিয়ান হার্বস আর সসে তৈরি ঝরঝরে সুস্বাদু সালাদ।",
     price: 280,
     imageUrl: "/hero.png",
   },
   {
+    id: "4",
     name: "আমেরিকান সালাদ",
     description: "প্রোটিন আর সবজির পারফেক্ট কম্বিনেশনের আমেরিকান সালাদ।",
     price: 320,

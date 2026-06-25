@@ -1,5 +1,6 @@
 "use client";
 
+import { useCartCount } from "../../hooks/userCartCount";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,7 @@ const navLinks = [
 
 export default function Navbar() {
   const { user, loading } = useAuth();
+  const cartCount = useCartCount();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -123,6 +125,11 @@ export default function Navbar() {
             aria-label="কার্ট"
           >
             <ShoppingCart className="h-5 w-5 text-foreground" />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
           {loading ? (
@@ -228,10 +235,15 @@ export default function Navbar() {
 
           <Link
             href="/cart"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:bg-secondary"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:bg-secondary"
             aria-label="কার্ট"
           >
             <ShoppingCart className="h-5 w-5 text-foreground" />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
           <button
