@@ -10,7 +10,7 @@ import { auth, googleProvider } from "./config";
 
 // Neon database e user sync
 async function syncUserToDb(user: User, name?: string) {
-  await fetch("/api/users/sync", {
+  const res = await fetch("/api/users/sync", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -20,6 +20,13 @@ async function syncUserToDb(user: User, name?: string) {
       image: user.photoURL,
     }),
   });
+
+  const data = await res.json();
+  if (!res.ok || !data.user) {
+    throw new Error("User sync failed");
+  }
+
+  return data.user as { isBanned?: boolean };
 }
 
 // Register
@@ -48,6 +55,15 @@ export async function loginWithEmail(email: string, password: string) {
     email,
     password
   );
+
+  const syncedUser = await syncUserToDb(userCredential.user);
+  if (syncedUser?.isBanned) {
+    await firebaseSignOut(auth);
+    const error = new Error("USER_BANNED");
+    (error as any).code = "auth/user-banned";
+    throw error;
+  }
+
   return userCredential.user;
 }
 
@@ -56,7 +72,13 @@ export async function loginWithGoogle() {
   const result = await signInWithPopup(auth, googleProvider);
 
   // Neon e sync (Google user notun hote pare)
-  await syncUserToDb(result.user);
+  const syncedUser = await syncUserToDb(result.user);
+  if (syncedUser?.isBanned) {
+    await firebaseSignOut(auth);
+    const error = new Error("USER_BANNED");
+    (error as any).code = "auth/user-banned";
+    throw error;
+  }
 
   return result.user;
 }

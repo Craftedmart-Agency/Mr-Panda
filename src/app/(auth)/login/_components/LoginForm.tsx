@@ -22,8 +22,10 @@ export default function LoginForm() {
       toast.success("সফলভাবে লগইন হয়েছে!");
       router.push("/");
     } catch (error: unknown) {
-      const err = error as { code?: string };
-      if (
+      const err = error as { code?: string; message?: string };
+      if (err.message === "USER_BANNED" || err.code === "auth/user-banned") {
+        toast.error("You are banned");
+      } else if (
         err.code === "auth/invalid-credential" ||
         err.code === "auth/wrong-password" ||
         err.code === "auth/user-not-found"
@@ -43,8 +45,13 @@ export default function LoginForm() {
       await loginWithGoogle();
       toast.success("সফলভাবে লগইন হয়েছে!");
       router.push("/");
-    } catch {
-      toast.error("Google লগইনে সমস্যা হয়েছে");
+    } catch (error: unknown) {
+      const err = error as { code?: string; message?: string };
+      if (err.message === "USER_BANNED" || err.code === "auth/user-banned") {
+        toast.error("You are banned");
+      } else {
+        toast.error("Google লগইনে সমস্যা হয়েছে");
+      }
     } finally {
       setGoogleLoading(false);
     }
