@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import OrderNotification from "./OrderNotification";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
@@ -15,6 +16,7 @@ import {
   FolderTree,
   Users,
   ShieldCheck,
+  Bell,
 } from "lucide-react";
 import { useAuth } from "@/lib/firebase/AuthProvider";
 import { logout } from "@/lib/firebase/auth";
@@ -23,6 +25,7 @@ import { toast } from "sonner";
 const adminLinks = [
   { label: "ওভারভিউ", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "অর্ডার", href: "/admin/orders", icon: ShoppingBag, exact: false },
+  { label: "নোটিফিকেশন", href: "/admin/notification", icon: Bell, exact: false },
   { label: "খাবার", href: "/admin/foods", icon: UtensilsCrossed, exact: false },
   { label: "ক্যাটাগরি", href: "/admin/categories", icon: FolderTree, exact: false },
   { label: "ইউজার", href: "/admin/users", icon: Users, exact: false },
@@ -88,6 +91,9 @@ export default function AdminHeader() {
 
         {/* Right — back to site + user */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Notification bell */}
+          <OrderNotification />
+
           <Link
             href="/"
             className="flex h-9 items-center gap-2 rounded-xl px-3 text-foreground/60 transition-colors hover:bg-secondary hover:text-foreground"

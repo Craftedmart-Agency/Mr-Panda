@@ -16,6 +16,12 @@ import {
 import { useAuth } from "@/lib/firebase/AuthProvider";
 import { logout } from "@/lib/firebase/auth";
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
+
+const AdminOrderNotification = dynamic(
+  () => import("@/app/(dashboard)/admin/_components/OrderNotification"),
+  { ssr: false }
+);
 
 const navLinks = [
   { label: "প্রোডাক্ট", href: "/menu" },
@@ -117,20 +123,24 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Right — Cart + Auth/Profile (desktop) */}
+        {/* Right — Cart or Admin notification + Auth/Profile (desktop) */}
         <div className="hidden items-center gap-4 lg:flex">
-          <Link
-            href="/cart"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:bg-secondary"
-            aria-label="কার্ট"
-          >
-            <ShoppingCart className="h-5 w-5 text-foreground" />
-            {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          {role === "ADMIN" ? (
+            <AdminOrderNotification />
+          ) : (
+            <Link
+              href="/cart"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:bg-secondary"
+              aria-label="কার্ট"
+            >
+              <ShoppingCart className="h-5 w-5 text-foreground" />
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          )}
 
           {loading ? (
             <div className="h-10 w-10 animate-pulse rounded-full bg-secondary" />
@@ -233,18 +243,22 @@ export default function Navbar() {
             </div>
           )}
 
-          <Link
-            href="/cart"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:bg-secondary"
-            aria-label="কার্ট"
-          >
-            <ShoppingCart className="h-5 w-5 text-foreground" />
-            {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          {role === "ADMIN" ? (
+            <AdminOrderNotification />
+          ) : (
+            <Link
+              href="/cart"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:bg-secondary"
+              aria-label="কার্ট"
+            >
+              <ShoppingCart className="h-5 w-5 text-foreground" />
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          )}
 
           <button
             onClick={() => setMobileOpen(true)}

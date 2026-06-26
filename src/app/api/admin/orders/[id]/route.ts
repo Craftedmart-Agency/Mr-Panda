@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { pusherServer } from "@/lib/pusher/server";
 
-// PATCH — status update
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -27,6 +27,16 @@ export async function PATCH(
       where: { id },
       data: { status },
       select: { id: true, status: true },
+    });
+
+    await pusherServer.trigger(`order-${id}`, "status-updated", {
+      orderId: id,
+      status,
+    });
+
+    await pusherServer.trigger("admin-orders", "order-updated", {
+      orderId: id,
+      status,
     });
 
     return NextResponse.json({ order });
