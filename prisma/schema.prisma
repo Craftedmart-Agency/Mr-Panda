@@ -99,6 +99,26 @@ model Notification {
   @@map("notification")
 }
 
+model Offer {
+  id            String    @id @default(cuid())
+  type          OfferType
+  title         String
+  description   String?
+  imageUrl      String
+  originalPrice Float
+  offerPrice    Float
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("offer")
+}
+
+enum OfferType {
+  DEAL
+  COMBO
+}
+
 enum OrderStatus {
   PENDING
   ACCEPTED

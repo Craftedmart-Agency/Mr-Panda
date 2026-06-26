@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell } from "lucide-react";
+import { Tag } from "lucide-react";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -17,10 +18,22 @@ import {
 const adminLinks = [
   { label: "ওভারভিউ", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "অর্ডার", href: "/admin/orders", icon: ShoppingBag, exact: false },
-  { label: "নোটিফিকেশন", href: "/admin/notification", icon: Bell, exact: false },
+  {
+    label: "নোটিফিকেশন",
+    href: "/admin/notification",
+    icon: Bell,
+    exact: false,
+  },
   { label: "খাবার", href: "/admin/foods", icon: UtensilsCrossed, exact: false },
-  { label: "ক্যাটাগরি", href: "/admin/categories", icon: FolderTree, exact: false },
+  {
+    label: "ক্যাটাগরি",
+    href: "/admin/categories",
+    icon: FolderTree,
+    exact: false,
+  },
   { label: "ইউজার", href: "/admin/users", icon: Users, exact: false },
+
+  { label: "অফার", href: "/admin/offers", icon: Tag, exact: false },
 ];
 
 export default function AdminSidebar() {
@@ -52,6 +65,17 @@ export default function AdminSidebar() {
             অ্যাডমিনিস্ট্রেটর অ্যাক্সেস
           </span>
         </div>
+      </div>
+
+      {/* Quick action: New Offer (fixed inside sidebar) */}
+      <div className="px-4 pt-4">
+        <Link
+          href="/admin/offers/new"
+          className="group mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:brightness-95"
+        >
+          <Tag className="h-4 w-4" />
+          <span>নতুন অফার</span>
+        </Link>
       </div>
 
       {/* Nav */}
