@@ -17,6 +17,7 @@ import {
   Users,
   ShieldCheck,
   Bell,
+  Tag,
 } from "lucide-react";
 import { useAuth } from "@/lib/firebase/AuthProvider";
 import { logout } from "@/lib/firebase/auth";
@@ -29,6 +30,7 @@ const adminLinks = [
   { label: "খাবার", href: "/admin/foods", icon: UtensilsCrossed, exact: false },
   { label: "ক্যাটাগরি", href: "/admin/categories", icon: FolderTree, exact: false },
   { label: "ইউজার", href: "/admin/users", icon: Users, exact: false },
+  { label: "অফার", href: "/admin/offers", icon: Tag, exact: false },
 ];
 
 export default function AdminHeader() {
