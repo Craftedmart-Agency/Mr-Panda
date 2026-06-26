@@ -1,6 +1,8 @@
 "use client";
 
+import { pusherClient } from "@/lib/pusher/client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ShoppingBag,
   Search,
@@ -63,14 +65,20 @@ const filterTabs = [
 const ROWS_PER_PAGE = 10;
 
 export default function AdminOrdersContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Order | null>(null);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
 
+
+
+  
   const fetchOrders = useCallback(() => {
     fetch(`/api/admin/orders?ts=${Date.now()}`, { cache: "no-store" })
       .then((res) => res.json())
@@ -86,6 +94,35 @@ export default function AdminOrdersContent() {
     const interval = setInterval(fetchOrders, 5000);
     return () => clearInterval(interval);
   }, [fetchOrders]);
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe("admin-orders");
+
+    const handleOrderUpdated = () => {
+      fetchOrders();
+    };
+
+    channel.bind("order-updated", handleOrderUpdated);
+    channel.bind("new-order", handleOrderUpdated);
+
+    return () => {
+      channel.unbind("order-updated", handleOrderUpdated);
+      channel.unbind("new-order", handleOrderUpdated);
+      pusherClient.unsubscribe("admin-orders");
+    };
+  }, [fetchOrders]);
+
+  const orderId = searchParams?.get("orderId") ?? null;
+
+  useEffect(() => {
+    if (!orderId || orderId === currentOrderId) return;
+
+    const selectedOrder = orders.find((order) => order.id === orderId);
+    if (selectedOrder) {
+      setSelected(selectedOrder);
+      setCurrentOrderId(orderId);
+    }
+  }, [orders, orderId, currentOrderId]);
 
   const handleStatusUpdate = async (orderId: string, status: string) => {
     setUpdating(true);
@@ -334,7 +371,11 @@ export default function AdminOrdersContent() {
       {selected && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-          onClick={() => setSelected(null)}
+          onClick={() => {
+            setSelected(null);
+            setCurrentOrderId(null);
+            router.replace("/admin/orders", { scroll: false });
+          }}
         >
           <div
             className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card p-6 shadow-2xl"
@@ -350,7 +391,11 @@ export default function AdminOrdersContent() {
                 </p>
               </div>
               <button
-                onClick={() => setSelected(null)}
+                onClick={() => {
+                  setSelected(null);
+                  setCurrentOrderId(null);
+                  router.replace("/admin/orders", { scroll: false });
+                }}
                 className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg hover:bg-secondary"
               >
                 <X className="h-5 w-5" />

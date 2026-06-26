@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Bell } from "lucide-react";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -16,6 +17,7 @@ import {
 const adminLinks = [
   { label: "ওভারভিউ", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "অর্ডার", href: "/admin/orders", icon: ShoppingBag, exact: false },
+  { label: "নোটিফিকেশন", href: "/admin/notification", icon: Bell, exact: false },
   { label: "খাবার", href: "/admin/foods", icon: UtensilsCrossed, exact: false },
   { label: "ক্যাটাগরি", href: "/admin/categories", icon: FolderTree, exact: false },
   { label: "ইউজার", href: "/admin/users", icon: Users, exact: false },
@@ -36,7 +38,9 @@ export default function AdminSidebar() {
         </div>
         <div className="flex flex-col leading-none">
           <span className="text-sm font-bold text-foreground">MR. PANDA</span>
-          <span className="mt-1 text-xs text-muted-foreground">অ্যাডমিন প্যানেল</span>
+          <span className="mt-1 text-xs text-muted-foreground">
+            অ্যাডমিন প্যানেল
+          </span>
         </div>
       </div>
 

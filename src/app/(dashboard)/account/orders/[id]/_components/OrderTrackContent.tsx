@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { pusherClient } from "@/lib/pusher/client";
 import {
   ArrowLeft,
   CircleCheck,
@@ -57,6 +58,23 @@ export default function OrderTrackContent() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+  }, [orderId]);
+
+  useEffect(() => {
+    if (!orderId) return;
+
+    const channel = pusherClient.subscribe(`order-${orderId}`);
+
+    const handleStatusUpdated = (data: { status: string }) => {
+      setOrder((prev) => (prev ? { ...prev, status: data.status } : prev));
+    };
+
+    channel.bind("status-updated", handleStatusUpdated);
+
+    return () => {
+      channel.unbind("status-updated", handleStatusUpdated);
+      pusherClient.unsubscribe(`order-${orderId}`);
+    };
   }, [orderId]);
 
   if (loading) {
