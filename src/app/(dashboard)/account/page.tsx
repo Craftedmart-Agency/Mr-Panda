@@ -86,7 +86,7 @@ export default function AccountOverview() {
             </p>
           </div>
           <Link
-            href="/menu"
+            href="/recipe"
             className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary shadow-lg transition-transform hover:scale-105"
           >
             অর্ডার করুন
@@ -119,14 +119,14 @@ export default function AccountOverview() {
       {/* Quick actions */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Link
-          href="/menu"
+          href="/recipe"
           className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:border-primary hover:shadow-md"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
             <UtensilsCrossed className="h-6 w-6 text-primary transition-colors group-hover:text-primary-foreground" />
           </div>
           <div className="flex-1">
-            <p className="font-bold text-foreground">মেনু দেখুন</p>
+            <p className="font-bold text-foreground">খাবার দেখুন</p>
             <p className="text-sm text-muted-foreground">নতুন খাবার আবিষ্কার করুন</p>
           </div>
           <ArrowRight className="h-5 w-5 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary" />
@@ -217,10 +217,10 @@ export default function AccountOverview() {
               মেনু থেকে আপনার প্রথম অর্ডার করুন
             </p>
             <Link
-              href="/menu"
+              href="/recipe"
               className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
             >
-              মেনু দেখুন
+              খাবার দেখুন
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

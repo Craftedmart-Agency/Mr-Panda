@@ -99,10 +99,10 @@ export default function HeroBanner() {
             </p>
 
             <Link
-              href="/menu"
+              href="/recipe"
               className="mt-7 inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/40"
             >
-              মেনু এক্সপ্লোর করুন
+              খাবার দেখুন
               <ArrowRight size={16} className="shrink-0" />
             </Link>
           </div>

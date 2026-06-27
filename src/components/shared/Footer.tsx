@@ -1,17 +1,18 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Send, Share2, AtSign } from "lucide-react";
 const navigation = [
-  { label: "মেনু", href: "/menu" },
+  { label: "খাবার", href: "/recipe" },
   { label: "আমাদের সম্পর্কে", href: "/about" },
   { label: "যোগাযোগ", href: "/contact" },
-  { label: "প্রধান খাবার", href: "/menu" },
+  { label: "স্পেশাল অফার", href: "/special-offer" },
 ];
 
 const dishes = [
-  { label: "ফিশ অ্যান্ড ভেজি", href: "/menu" },
-  { label: "টোফু চিলি", href: "/menu" },
-  { label: "এগ অ্যান্ড কিউকাম্বার", href: "/menu" },
-  { label: "লুম্পিয়া উইথ সস", href: "/menu" },
+  { label: "ফিশ অ্যান্ড ভেজি", href: "/recipe" },
+  { label: "টোফু চিলি", href: "/recipe" },
+  { label: "এগ অ্যান্ড কিউকাম্বার", href: "/recipe" },
+  { label: "লুম্পিয়া উইথ সস", href: "/recipe" },
 ];
 
 const socials = [
@@ -29,10 +30,8 @@ export default function Footer() {
           <div className="lg:col-span-5">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                <span className="text-xl">🐼</span>
-              </div>
-              <span className="text-lg font-bold text-foreground">MR. PANDA</span>
+              <Image src="/logo.svg" alt="মি. পান্ডা" width={90} height={90} />
+              <span className="text-lg font-bold text-foreground">মি. পান্ডা</span>
             </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">

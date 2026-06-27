@@ -4,7 +4,7 @@ import { pusherServer } from "@/lib/pusher/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { firebaseUid, items, totalAmount, deliveryAddress, phoneNumber } =
+    const { firebaseUid, items, totalAmount, deliveryAddress, phoneNumber, note } =
       await req.json();
 
     // Validation
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
         totalAmount,
         deliveryAddress,
         phoneNumber,
+        note: note || null,
         status: "PENDING",
         items: {
           create: items.map(

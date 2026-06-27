@@ -89,10 +89,10 @@ export default function AboutPage() {
             </p>
 
             <Link
-              href="/menu"
+              href="/recipe"
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/40"
             >
-              মেনু দেখুন
+              খাবার দেখুন
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

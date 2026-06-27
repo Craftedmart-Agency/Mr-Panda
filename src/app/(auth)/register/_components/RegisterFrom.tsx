@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { registerWithEmail, loginWithGoogle } from "@/lib/firebase/auth";
@@ -66,8 +67,8 @@ export default function RegisterForm() {
         <div className="absolute -left-20 top-10 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -right-20 bottom-10 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-12 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
-            <span className="text-4xl">🐼</span>
+          <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-full bg-white/20">
+            <Image src="/logo.svg" alt="MR. PANDA" width={144} height={144} className="rounded-full" />
           </div>
           <h2 className="mt-8 text-4xl font-bold text-primary-foreground">
             MR. PANDA
@@ -83,8 +84,8 @@ export default function RegisterForm() {
       <div className="flex w-full items-center justify-center bg-background px-6 py-12 lg:w-1/2">
         <div className="w-full max-w-md">
           <div className="mb-8 flex flex-col items-center lg:hidden">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-              <span className="text-3xl">🐼</span>
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-primary/10">
+              <Image src="/logo.svg" alt="MR. PANDA" width={96} height={96} className="rounded-full" />
             </div>
           </div>
 

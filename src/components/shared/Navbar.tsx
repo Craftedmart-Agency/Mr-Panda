@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/firebase/AuthProvider";
 import { logout } from "@/lib/firebase/auth";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 const AdminOrderNotification = dynamic(
   () => import("@/app/(dashboard)/admin/_components/OrderNotification"),
@@ -24,8 +25,7 @@ const AdminOrderNotification = dynamic(
 );
 
 const navLinks = [
-  { label: "প্রোডাক্ট", href: "/menu" },
-  { label: "রেসিপি", href: "/recipe" },
+  { label: "খাবার", href: "/recipe" },
   { label: "আমাদের সম্পর্কে", href: "/about" },
 ];
 
@@ -35,7 +35,7 @@ export default function Navbar() {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [role, setRole] = useState("CUSTOMER");
+  const [role, setRole] = useState<string | null>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const mobileProfileRef = useRef<HTMLDivElement>(null);
 
@@ -45,11 +45,13 @@ export default function Navbar() {
       fetch(`/api/users/me?firebaseUid=${user.uid}`)
         .then((res) => res.json())
         .then((data) => {
-          if (data.user?.role) setRole(data.user.role);
+          setRole(data.user?.role ?? "CUSTOMER");
         })
-        .catch(() => {});
+        .catch(() => setRole("CUSTOMER"));
+    } else if (!loading) {
+      setRole("CUSTOMER");
     }
-  }, [user]);
+  }, [user, loading]);
 
   // Baire click korle profile dropdown bondho (desktop + mobile)
   useEffect(() => {
@@ -88,12 +90,8 @@ export default function Navbar() {
       <nav className="flex w-full items-center justify-between px-6 py-4 lg:px-12">
         {/* Left — Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-            <span className="text-xl">🐼</span>
-          </div>
-          <span className="text-lg font-bold tracking-tight text-foreground">
-            MR. PANDA
-          </span>
+          <Image src="/logo.svg" alt="মি. পান্ডা" width={80} height={80} />
+          <span className="text-lg font-bold tracking-tight text-foreground">মি. পান্ডা</span>
         </Link>
 
         {/* Center — Nav Links + Phone */}
@@ -102,7 +100,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+              className="text-base font-semibold text-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>
@@ -110,13 +108,13 @@ export default function Navbar() {
 
           <Link
             href="/special-offer"
-            className="rounded-md bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="rounded-md bg-primary px-5 py-2 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
             স্পেশাল অফার
           </Link>
           <a
             href="tel:+923351263561"
-            className="flex items-center gap-2 text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+            className="flex items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary"
           >
             <Phone className="h-4 w-4 text-primary" />
             <span className="hidden xl:inline">+৯২৩৩৫১২৬৩৫৬১</span>
@@ -125,7 +123,9 @@ export default function Navbar() {
 
         {/* Right — Cart or Admin notification + Auth/Profile (desktop) */}
         <div className="hidden items-center gap-4 lg:flex">
-          {role === "ADMIN" ? (
+          {role === null ? (
+            <div className="h-10 w-10" />
+          ) : role === "ADMIN" ? (
             <AdminOrderNotification />
           ) : (
             <Link
@@ -186,13 +186,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className="rounded-md px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:text-primary"
+                className="rounded-md px-4 py-2 text-base font-semibold text-foreground transition-colors hover:text-primary"
               >
                 লগইন
               </Link>
               <Link
                 href="/register"
-                className="rounded-md border border-primary px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                className="rounded-md border border-primary px-4 py-2 text-base font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 সাইন আপ
               </Link>
@@ -243,7 +243,9 @@ export default function Navbar() {
             </div>
           )}
 
-          {role === "ADMIN" ? (
+          {role === null ? (
+            <div className="h-10 w-10" />
+          ) : role === "ADMIN" ? (
             <AdminOrderNotification />
           ) : (
             <Link
@@ -287,10 +289,8 @@ export default function Navbar() {
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-              <span className="text-lg">🐼</span>
-            </div>
-            <span className="font-bold text-foreground">MR. PANDA</span>
+            <Image src="/logo.svg" alt="মি. পান্ডা" width={72} height={72} />
+            <span className="font-bold text-foreground">মি. পান্ডা</span>
           </div>
           <button
             onClick={() => setMobileOpen(false)}

@@ -6,7 +6,8 @@ import { CircleCheck, Home, ClipboardList, Clock } from "lucide-react";
 
 export default function OrderSuccessContent() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("id") || "ORD000000";
+  const rawId = searchParams.get("id") || "";
+  const orderId = rawId ? `#${rawId.slice(-8).toUpperCase()}` : "#ORD00000";
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background px-6 pt-20">

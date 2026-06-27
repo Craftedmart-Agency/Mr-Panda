@@ -41,10 +41,10 @@ export default function AccountCartContent() {
             মেনু থেকে খাবার যোগ করুন
           </p>
           <Link
-            href="/menu"
+            href="/recipe"
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
           >
-            মেনু দেখুন
+            খাবার দেখুন
           </Link>
         </div>
       ) : (

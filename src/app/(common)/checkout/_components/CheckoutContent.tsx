@@ -77,6 +77,7 @@ export default function CheckoutContent() {
           totalAmount: total,
           deliveryAddress: form.address,
           phoneNumber: form.phone,
+          note: form.note || undefined,
         }),
       });
 
@@ -207,20 +208,14 @@ export default function CheckoutContent() {
                   ক্যাশ অন ডেলিভারি
                 </span>
               </label>
-              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border p-4 transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="online"
-                  checked={form.payment === "online"}
-                  onChange={(e) => setForm({ ...form, payment: e.target.value })}
-                  className="accent-primary"
-                />
-                <CreditCard className="h-5 w-5 text-primary" />
-                <span className="text-sm font-medium text-foreground">
-                  অনলাইন পেমেন্ট
-                </span>
-              </label>
+              <div className="flex cursor-not-allowed items-center gap-3 rounded-xl border border-border bg-secondary/30 p-4 opacity-50">
+                <input type="radio" disabled className="accent-primary" />
+                <CreditCard className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">অনলাইন পেমেন্ট</p>
+                  <p className="text-xs text-muted-foreground">শীঘ্রই আসছে</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

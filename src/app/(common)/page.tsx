@@ -9,8 +9,8 @@ export default function HomePage() {
   return (
     <>
       <HeroBanner />
-      <SpecialFood />
       <WelcomeSection/>
+      <SpecialFood />
       <ExpertChef />
       <HappyCustomers />
       <NewsletterSection/>
