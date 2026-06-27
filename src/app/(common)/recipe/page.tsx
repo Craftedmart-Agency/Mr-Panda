@@ -11,14 +11,14 @@ export default function RecipePage() {
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
             <ChefHatIcon />
-            শেফের স্পেশাল
+            তাজা ও সুস্বাদু
           </div>
           <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
-            আমাদের <span className="text-primary">রেসিপি</span>
+            আমাদের <span className="text-primary">খাবার</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground">
-            ঘরে বসেই বানিয়ে ফেলুন আমাদের জনপ্রিয় খাবারগুলো। প্রতিটি রেসিপিতে
-            ধাপে ধাপে নির্দেশনা আর প্রয়োজনীয় উপকরণ।
+            তাজা উপকরণে তৈরি আমাদের সুস্বাদু খাবারগুলো দেখুন এবং পছন্দের খাবার
+            সরাসরি কার্টে যোগ করে অর্ডার করুন।
           </p>
         </div>
       </div>

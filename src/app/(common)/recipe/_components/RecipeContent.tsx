@@ -1,104 +1,103 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { Search, X, Clock, Flame, Users, Star, ChefHat } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Search, X, UtensilsCrossed } from "lucide-react";
+import FoodCard from "../../_components/FoodCard";
 
-interface Recipe {
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Food {
   id: string;
   name: string;
   description: string;
+  price: number;
   imageUrl: string;
-  category: string;
-  cookTime: string;
-  difficulty: string;
-  servings: number;
-  ingredients: number;
-  rating: number;
+  category: { id: string; name: string };
 }
 
-const categories = ["সব", "সালাদ", "পিৎজা", "বার্গার", "পাস্তা", "ড্রিংকস"];
-
-const recipes: Recipe[] = [
-  {
-    id: "1",
-    name: "স্পেশাল সালাদ",
-    description: "তাজা সবজি আর বিশেষ ড্রেসিং দিয়ে তৈরি স্বাস্থ্যকর সালাদ।",
-    imageUrl: "/hero.png",
-    category: "সালাদ",
-    cookTime: "১৫ মিনিট",
-    difficulty: "সহজ",
-    servings: 2,
-    ingredients: 8,
-    rating: 4.8,
-  },
-  {
-    id: "2",
-    name: "চিজ বার্গার",
-    description: "জুসি বিফ প্যাটি, চিজ আর তাজা সবজি দিয়ে তৈরি মজাদার বার্গার।",
-    imageUrl: "/hero.png",
-    category: "বার্গার",
-    cookTime: "২৫ মিনিট",
-    difficulty: "মাঝারি",
-    servings: 1,
-    ingredients: 12,
-    rating: 4.9,
-  },
-  {
-    id: "3",
-    name: "মার্গারিটা পিৎজা",
-    description: "ক্লাসিক টমেটো সস, মোজারেলা চিজ আর তুলসি পাতার পিৎজা।",
-    imageUrl: "/hero.png",
-    category: "পিৎজা",
-    cookTime: "৪০ মিনিট",
-    difficulty: "মাঝারি",
-    servings: 4,
-    ingredients: 10,
-    rating: 4.7,
-  },
-  {
-    id: "4",
-    name: "হোয়াইট সস পাস্তা",
-    description: "ক্রিমি হোয়াইট সসে রান্না করা মুখরোচক ইতালিয়ান পাস্তা।",
-    imageUrl: "/hero.png",
-    category: "পাস্তা",
-    cookTime: "৩০ মিনিট",
-    difficulty: "সহজ",
-    servings: 2,
-    ingredients: 9,
-    rating: 4.6,
-  },
-  {
-    id: "5",
-    name: "রাশিয়ান সালাদ",
-    description:
-      "ক্রিমি টেক্সচার আর মুখরোচক স্বাদের ঐতিহ্যবাহী রাশিয়ান সালাদ।",
-    imageUrl: "/hero.png",
-    category: "সালাদ",
-    cookTime: "২০ মিনিট",
-    difficulty: "সহজ",
-    servings: 3,
-    ingredients: 7,
-    rating: 4.5,
-  },
-  {
-    id: "6",
-    name: "পেপারোনি পিৎজা",
-    description: "স্পাইসি পেপারোনি আর এক্সট্রা চিজে ভরা মজাদার পিৎজা।",
-    imageUrl: "/hero.png",
-    category: "পিৎজা",
-    cookTime: "৪৫ মিনিট",
-    difficulty: "কঠিন",
-    servings: 4,
-    ingredients: 14,
-    rating: 4.9,
-  },
-];
+function CardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+      <div className="aspect-[4/3] animate-pulse bg-secondary" />
+      <div className="space-y-3 p-4">
+        <div className="h-4 w-3/4 animate-pulse rounded-full bg-secondary" />
+        <div className="h-3 w-full animate-pulse rounded-full bg-secondary" />
+        <div className="h-3 w-2/3 animate-pulse rounded-full bg-secondary" />
+        <div className="mt-4 h-10 w-full animate-pulse rounded-2xl bg-secondary" />
+      </div>
+    </div>
+  );
+}
 
 export default function RecipeContent() {
-  const [activeCategory, setActiveCategory] = useState("সব");
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [activeCategory, setActiveCategory] = useState("ALL");
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const [isFixed, setIsFixed] = useState(false);
+  const [barHeight, setBarHeight] = useState(0);
+  const [navbarHeight, setNavbarHeight] = useState(80);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const barRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/menu")
+      .then((res) => res.json())
+      .then((data) => {
+        setFoods(Array.isArray(data.foods) ? data.foods : []);
+        setCategories(Array.isArray(data.categories) ? data.categories : []);
+      })
+      .catch(() => {
+        setFoods([]);
+        setCategories([]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Measure actual navbar height
+  useEffect(() => {
+    const navbar = document.querySelector("header");
+    if (navbar) setNavbarHeight(navbar.getBoundingClientRect().height);
+  }, []);
+
+  // Measure filter bar height
+  useEffect(() => {
+    if (barRef.current) setBarHeight(barRef.current.offsetHeight);
+  }, [categories]);
+
+  // Fixed on scroll — use scroll listener with measured navbar height
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sentinelRef.current) return;
+      const top = sentinelRef.current.getBoundingClientRect().top;
+      setIsFixed(top <= navbarHeight);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [navbarHeight]);
+
+  // Check if category chips can scroll right
+  useEffect(() => {
+    const el = chipsRef.current;
+    if (!el) return;
+    const check = () => setCanScrollRight(el.scrollWidth > el.clientWidth + el.scrollLeft + 4);
+    check();
+    el.addEventListener("scroll", check);
+    window.addEventListener("resize", check);
+    return () => {
+      el.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, [categories]);
 
   const handleSearch = () => setSearchQuery(searchInput.trim());
   const handleClear = () => {
@@ -106,163 +105,161 @@ export default function RecipeContent() {
     setSearchQuery("");
   };
 
-  const filteredRecipes = recipes.filter((recipe) => {
+  const filteredFoods = foods.filter((food) => {
     const matchesCategory =
-      activeCategory === "সব" || recipe.category === activeCategory;
+      activeCategory === "ALL" || food.category.id === activeCategory;
+    const searchTerm = searchQuery.toLowerCase();
     const matchesSearch =
-      recipe.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      recipe.description.toLowerCase().includes(searchQuery.toLowerCase());
+      food.name.toLowerCase().includes(searchTerm) ||
+      food.description.toLowerCase().includes(searchTerm);
     return matchesCategory && matchesSearch;
   });
 
-  return (
-    <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6 lg:px-12">
-      {/* Search bar */}
-      <div className="mx-auto mb-8 max-w-2xl">
-        <div className="group relative flex items-center gap-3 rounded-2xl border border-border bg-card p-2 shadow-sm transition-all focus-within:border-primary focus-within:shadow-lg focus-within:shadow-primary/10">
-          {/* Search icon */}
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
-            <Search className="h-5 w-5" />
+  const FilterBar = (
+    <div className={isFixed ? "mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12" : ""}>
+      {/* Search */}
+      <div className="mx-auto max-w-2xl">
+        <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 shadow-sm transition-all focus-within:border-primary focus-within:shadow-lg focus-within:shadow-primary/10">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Search className="h-4 w-4" />
           </div>
-
-          {/* Input */}
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            placeholder="রেসিপি খুঁজুন... যেমন পিৎজা, সালাদ"
-            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none sm:text-base"
+            placeholder="পছন্দের খাবার খুঁজুন..."
+            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
-
-          {/* Clear button */}
           {searchInput && (
             <button
               onClick={handleClear}
-              className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              aria-label="clear"
+              className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              aria-label="মুছুন"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
             </button>
           )}
-
-          {/* Search button */}
           <button
             onClick={handleSearch}
-            className="shrink-0 cursor-pointer rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/40"
+            className="shrink-0 cursor-pointer rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:shadow-md hover:shadow-primary/30 active:scale-95"
           >
-            সার্চ
+            খুঁজুন
           </button>
-        </div>
-
-        {/* Popular searches */}
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <span className="text-xs text-muted-foreground">জনপ্রিয়:</span>
-          {["পিৎজা", "বার্গার", "সালাদ"].map((tag) => (
-            <button
-              key={tag}
-              onClick={() => {
-                setSearchInput(tag);
-                setSearchQuery(tag);
-              }}
-              className="cursor-pointer rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-            >
-              {tag}
-            </button>
-          ))}
         </div>
       </div>
 
-      {/* Category filter */}
-      <div className="mb-10 flex flex-wrap justify-center gap-3">
-        {categories.map((cat) => (
+      {/* Category chips — horizontal scroll with fade indicator */}
+      <div className="relative mt-3">
+        <div
+          ref={chipsRef}
+          className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]"
+        >
           <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`cursor-pointer rounded-full px-6 py-2.5 text-sm font-semibold transition-all ${
-              activeCategory === cat
-                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+            onClick={() => setActiveCategory("ALL")}
+            className={`shrink-0 cursor-pointer rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+              activeCategory === "ALL"
+                ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
                 : "border border-border bg-card text-foreground hover:border-primary hover:text-primary"
             }`}
           >
-            {cat}
+            সব খাবার
           </button>
-        ))}
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`shrink-0 cursor-pointer rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                activeCategory === cat.id
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
+                  : "border border-border bg-card text-foreground hover:border-primary hover:text-primary"
+              }`}
+            >
+              {cat.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Right fade — shows when more chips are hidden */}
+        {canScrollRight && (
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-background to-transparent" />
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="mx-auto max-w-[1400px] px-4 pb-12 pt-6 sm:px-6 lg:px-12">
+      {/* Sentinel — scroll position reference */}
+      <div ref={sentinelRef} className="h-0" />
+
+      {/* Filter bar */}
+      <div
+        ref={barRef}
+        className={`z-20 border-b border-border bg-background ${
+          isFixed
+            ? "fixed left-0 right-0 pb-3 pt-3 shadow-md"
+            : "pb-5 pt-0"
+        }`}
+        style={isFixed ? { top: navbarHeight } : undefined}
+      >
+        {FilterBar}
       </div>
 
-      {/* Recipe grid */}
-      {filteredRecipes.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredRecipes.map((recipe) => (
-            <div
-              key={recipe.id}
-              className="group overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
-            >
-              {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src={recipe.imageUrl}
-                  alt={recipe.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                {/* Category badge */}
-                <span className="absolute left-4 top-4 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-primary backdrop-blur-sm">
-                  {recipe.category}
-                </span>
-                {/* Rating badge */}
-                <span className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur-sm">
-                  <Star className="h-3 w-3 fill-primary text-primary" />
-                  {recipe.rating}
-                </span>
-              </div>
+      {/* Spacer */}
+      {isFixed && <div style={{ height: barHeight }} />}
 
-              {/* Content */}
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-foreground">
-                  {recipe.name}
-                </h3>
-                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-                  {recipe.description}
-                </p>
+      {/* Count */}
+      {!loading && (
+        <div className="mb-5 mt-4 flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            <span className="font-bold text-foreground">{filteredFoods.length}</span> টি খাবার পাওয়া গেছে
+          </span>
+          {searchQuery && (
+            <span className="rounded-full bg-primary/10 px-3 py-0.5 text-xs font-medium text-primary">
+              &ldquo;{searchQuery}&rdquo;
+            </span>
+          )}
+        </div>
+      )}
 
-                {/* Meta info */}
-                <div className="mt-4 flex flex-wrap gap-3 border-t border-border pt-4 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4 text-primary" />
-                    {recipe.cookTime}
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Users className="h-4 w-4 text-primary" />
-                    {recipe.servings} জন
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Flame className="h-4 w-4 text-primary" />
-                    {recipe.difficulty}
-                  </div>
-                </div>
-
-                {/* Ingredients + button */}
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <ChefHat className="h-4 w-4 text-primary" />
-                    {recipe.ingredients} উপকরণ
-                  </span>
-                  <button className="cursor-pointer rounded-full bg-secondary px-4 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
-                    রেসিপি দেখুন
-                  </button>
-                </div>
-              </div>
-            </div>
+      {/* Grid */}
+      {loading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      ) : filteredFoods.length > 0 ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredFoods.map((food) => (
+            <FoodCard
+              key={food.id}
+              id={food.id}
+              name={food.name}
+              price={food.price}
+              imageUrl={food.imageUrl}
+              description={food.description}
+              category={food.category?.name}
+            />
           ))}
         </div>
       ) : (
-        <div className="py-24 text-center">
-          <p className="mb-2 text-4xl">😕</p>
-          <p className="text-base text-muted-foreground">
-            কোনো রেসিপি পাওয়া যায়নি।{" "}
-            <span className="font-medium text-primary">অন্য কিছু খুঁজুন।</span>
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
+            <UtensilsCrossed className="h-9 w-9 text-muted-foreground" />
+          </div>
+          <p className="mt-5 text-lg font-semibold text-foreground">
+            কোনো খাবার পাওয়া যায়নি
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            অন্য কিছু দিয়ে সার্চ করুন অথবা{" "}
+            <button
+              onClick={handleClear}
+              className="cursor-pointer font-medium text-primary hover:underline"
+            >
+              সব দেখুন
+            </button>
           </p>
         </div>
       )}

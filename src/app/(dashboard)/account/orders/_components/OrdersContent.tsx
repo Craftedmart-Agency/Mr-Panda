@@ -173,10 +173,10 @@ export default function OrdersContent() {
             মেনু থেকে আপনার প্রথম অর্ডার করুন
           </p>
           <Link
-            href="/menu"
+            href="/recipe"
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
           >
-            মেনু দেখুন
+            খাবার দেখুন
           </Link>
         </div>
       )}

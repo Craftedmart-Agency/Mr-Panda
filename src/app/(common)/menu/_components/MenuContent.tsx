@@ -237,7 +237,15 @@ export default function MenuContent() {
           {filteredFoods.length > 0 ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {filteredFoods.map((food) => (
-                <FoodCard key={food.id} {...food} />
+                <FoodCard
+                  key={food.id}
+                  id={food.id}
+                  name={food.name}
+                  price={food.price}
+                  imageUrl={food.imageUrl}
+                  description={food.description}
+                  category={food.category?.name}
+                />
               ))}
             </div>
           ) : (

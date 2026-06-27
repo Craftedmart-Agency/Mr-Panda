@@ -1,40 +1,37 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ArrowRight, UtensilsCrossed } from "lucide-react";
 import FoodCard from "./FoodCard";
 
-const foods = [
-  {
-    id: "1",
-    name: "স্পেশাল সালাদ",
-    description: "তাজা সবজি আর বিশেষ ড্রেসিং দিয়ে তৈরি স্বাস্থ্যকর সালাদ।",
-    price: 250,
-    imageUrl: "/hero.png",
-  },
-  {
-    id: "2",
-    name: "রাশিয়ান সালাদ",
-    description: "ক্রিমি টেক্সচার আর মুখরোচক স্বাদের রাশিয়ান সালাদ।",
-    price: 300,
-    imageUrl: "/hero.png",
-  },
-  {
-    id: "3",
-    name: "এশিয়ান সালাদ",
-    description: "এশিয়ান হার্বস আর সসে তৈরি ঝরঝরে সুস্বাদু সালাদ।",
-    price: 280,
-    imageUrl: "/hero.png",
-  },
-  {
-    id: "4",
-    name: "আমেরিকান সালাদ",
-    description: "প্রোটিন আর সবজির পারফেক্ট কম্বিনেশনের আমেরিকান সালাদ।",
-    price: 320,
-    imageUrl: "/hero.png",
-  },
-];
+interface Food {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  category: { id: string; name: string };
+}
 
 export default function SpecialFood() {
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/menu")
+      .then((res) => res.json())
+      .then((data) => {
+        const list: Food[] = Array.isArray(data.foods) ? data.foods : [];
+        setFoods(list.slice(0, 6));
+      })
+      .catch(() => setFoods([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#fce7f3] via-[#fbd5e8] to-[#f9c5dd] py-20 lg:py-28">
-      {/* SVG Blob — top left */}
+      {/* Blob decorations */}
       <svg
         className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 text-primary/20"
         viewBox="0 0 200 200"
@@ -46,8 +43,6 @@ export default function SpecialFood() {
           transform="translate(100 100)"
         />
       </svg>
-
-      {/* SVG Blob — bottom right */}
       <svg
         className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 text-accent/40"
         viewBox="0 0 200 200"
@@ -59,28 +54,17 @@ export default function SpecialFood() {
           transform="translate(100 100)"
         />
       </svg>
-
-      {/* SVG Blob — small accent, top right */}
-      <svg
-        className="pointer-events-none absolute right-10 top-16 hidden h-32 w-32 text-primary/15 lg:block"
-        viewBox="0 0 200 200"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="currentColor"
-          d="M48.2,-77.8C61.9,-69.3,72.3,-55.3,78.7,-40.1C85.1,-24.9,87.5,-8.5,85.3,7.2C83.1,22.9,76.3,37.9,66.4,50.6C56.5,63.3,43.5,73.7,28.8,78.9C14.1,84.1,-2.3,84.1,-18.1,80.3C-33.9,76.5,-49.1,68.9,-60.8,57.3C-72.5,45.7,-80.7,30.1,-83.5,13.4C-86.3,-3.3,-83.7,-21.1,-75.8,-35.8C-67.9,-50.5,-54.7,-62.1,-40.3,-70.2C-25.9,-78.3,-10.3,-82.9,3.2,-87.9C16.7,-92.9,34.5,-86.3,48.2,-77.8Z"
-          transform="translate(100 100)"
-        />
-      </svg>
-
-      {/* Soft glow blobs */}
       <div className="pointer-events-none absolute -left-20 top-0 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-primary/25 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-12">
         {/* Heading */}
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary backdrop-blur-sm">
+            <UtensilsCrossed className="h-3.5 w-3.5" />
+            আমাদের মেনু
+          </span>
+          <h2 className="mt-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
             আমাদের সুস্বাদু এবং স্পেশাল
             <br />
             <span className="text-primary">খাবার</span>
@@ -91,11 +75,40 @@ export default function SpecialFood() {
           </p>
         </div>
 
-        {/* Cards grid */}
-        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {foods.map((food) => (
-            <FoodCard key={food.name} {...food} />
-          ))}
+        {/* Cards */}
+        {loading ? (
+          <div className="mt-16 flex justify-center">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/40 border-t-primary" />
+          </div>
+        ) : foods.length > 0 ? (
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {foods.map((food) => (
+              <FoodCard
+                key={food.id}
+                id={food.id}
+                name={food.name}
+                price={food.price}
+                imageUrl={food.imageUrl}
+                description={food.description}
+                category={food.category?.name}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-16 text-center">
+            <p className="text-base text-foreground/60">এখনো কোনো খাবার যোগ করা হয়নি।</p>
+          </div>
+        )}
+
+        {/* View all button */}
+        <div className="mt-12 flex justify-center">
+          <Link
+            href="/recipe"
+            className="group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-bold text-primary-foreground shadow-xl shadow-primary/30 transition-all hover:brightness-105 hover:shadow-2xl hover:shadow-primary/40 sm:text-base"
+          >
+            সব খাবার দেখুন
+            <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>

@@ -38,10 +38,10 @@ export default function NotFound() {
             হোমে ফিরে যান
           </Link>
           <Link
-            href="/menu"
+            href="/recipe"
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-border px-8 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary sm:w-auto"
           >
-            মেনু দেখুন
+            খাবার দেখুন
           </Link>
         </div>
       </div>

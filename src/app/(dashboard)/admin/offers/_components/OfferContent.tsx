@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, Tag, X, Power } from "lucide-react";
+import { Plus, Pencil, Trash2, Tag, X } from "lucide-react";
 import { uploadImage } from "@/lib/cloudinary/upload";
 import { toast } from "sonner";
 
@@ -156,6 +156,9 @@ export default function OffersContent() {
     }
   };
 
+  const activeCount = offers.filter((o) => o.isActive).length;
+  const inactiveCount = offers.filter((o) => !o.isActive).length;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -170,12 +173,30 @@ export default function OffersContent() {
         </div>
         <button
           onClick={openAdd}
-          className="flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
+          className="flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-xl"
         >
           <Plus className="h-4 w-4" />
           নতুন অফার
         </button>
       </div>
+
+      {/* Stats */}
+      {!loading && offers.length > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-2xl border border-border bg-card p-4 text-center shadow-sm">
+            <p className="text-2xl font-bold text-foreground">{offers.length}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">মোট অফার</p>
+          </div>
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 text-center shadow-sm">
+            <p className="text-2xl font-bold text-primary">{activeCount}</p>
+            <p className="mt-0.5 text-xs text-primary/60">চালু</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-secondary/40 p-4 text-center shadow-sm">
+            <p className="text-2xl font-bold text-muted-foreground">{inactiveCount}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">বন্ধ</p>
+          </div>
+        </div>
+      )}
 
       {/* Grid */}
       {loading ? (
@@ -183,73 +204,136 @@ export default function OffersContent() {
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-secondary border-t-primary" />
         </div>
       ) : offers.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {offers.map((offer) => {
             const discount = Math.round(
               ((offer.originalPrice - offer.offerPrice) / offer.originalPrice) * 100
             );
+            const savings = offer.originalPrice - offer.offerPrice;
             return (
               <div
                 key={offer.id}
-                className={`overflow-hidden rounded-2xl border bg-card shadow-sm ${
-                  offer.isActive ? "border-border" : "border-border opacity-60"
+                className={`group overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:shadow-md ${
+                  offer.isActive
+                    ? "border-border"
+                    : "border-dashed border-border/60 opacity-65"
                 }`}
               >
-                <div className="relative h-40">
-                  <Image src={offer.imageUrl} alt={offer.title} fill className="object-cover" />
-                  <span className="absolute left-2 top-2 rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground">
-                    {offer.type === "DEAL" ? "ডিল" : "কম্বো"}
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={offer.imageUrl}
+                    alt={offer.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {/* gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                  {/* Type badge — top left */}
+                  <span
+                    className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow ${
+                      offer.type === "DEAL"
+                        ? "bg-primary"
+                        : "bg-violet-600"
+                    }`}
+                  >
+                    {offer.type === "DEAL" ? "🔥 ডিল" : "🎁 কম্বো"}
                   </span>
+
+                  {/* Discount badge — top right */}
                   {discount > 0 && (
-                    <span className="absolute right-2 top-2 rounded-full bg-red-500 px-2.5 py-1 text-xs font-bold text-white">
-                      {discount}% ছাড়
+                    <span className="absolute right-3 top-3 rounded-full bg-red-500 px-2.5 py-1 text-xs font-bold text-white shadow">
+                      -{discount}%
                     </span>
                   )}
+
+                  {/* Title on image bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
+                    <h3 className="line-clamp-1 text-sm font-bold text-white drop-shadow">
+                      {offer.title}
+                    </h3>
+                  </div>
+
+                  {/* Inactive overlay */}
                   {!offer.isActive && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <span className="rounded-full bg-card px-3 py-1 text-xs font-semibold text-foreground">
-                        বন্ধ
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
+                      <span className="rounded-full border border-white/30 bg-black/60 px-4 py-1.5 text-xs font-semibold text-white">
+                        বন্ধ আছে
                       </span>
                     </div>
                   )}
                 </div>
+
+                {/* Body */}
                 <div className="p-4">
-                  <h3 className="font-bold text-foreground">{offer.title}</h3>
                   {offer.description && (
-                    <p className="line-clamp-1 text-xs text-muted-foreground">
+                    <p className="mb-3 line-clamp-1 text-xs text-muted-foreground">
                       {offer.description}
                     </p>
                   )}
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="text-lg font-bold text-primary">৳{offer.offerPrice}</span>
-                    <span className="text-sm text-muted-foreground line-through">
-                      ৳{offer.originalPrice}
-                    </span>
+
+                  {/* Price block */}
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <span className="text-xl font-extrabold text-primary">
+                        ৳{offer.offerPrice}
+                      </span>
+                      <span className="ml-1.5 text-sm text-muted-foreground line-through">
+                        ৳{offer.originalPrice}
+                      </span>
+                    </div>
+                    {savings > 0 && (
+                      <span className="rounded-lg bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600 dark:bg-red-950/40 dark:text-red-400">
+                        ৳{savings} সাশ্রয়
+                      </span>
+                    )}
                   </div>
-                  <div className="mt-3 flex gap-1 border-t border-border pt-3">
+
+                  {/* Actions */}
+                  <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+                    {/* Pill toggle */}
                     <button
                       onClick={() => toggleActive(offer)}
-                      className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-2 text-xs font-medium transition-colors ${
-                        offer.isActive
-                          ? "bg-green-50 text-green-700 hover:bg-green-100"
-                          : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-                      }`}
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-1 transition-colors hover:bg-secondary"
                     >
-                      <Power className="h-3.5 w-3.5" />
-                      {offer.isActive ? "চালু" : "বন্ধ"}
+                      <div
+                        className={`relative h-5 w-9 flex-shrink-0 rounded-full transition-all duration-200 ${
+                          offer.isActive ? "bg-primary" : "bg-muted-foreground/25"
+                        }`}
+                      >
+                        <div
+                          className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                            offer.isActive ? "translate-x-[1.125rem]" : "translate-x-0.5"
+                          }`}
+                        />
+                      </div>
+                      <span
+                        className={`text-xs font-medium ${
+                          offer.isActive ? "text-foreground" : "text-muted-foreground"
+                        }`}
+                      >
+                        {offer.isActive ? "চালু" : "বন্ধ"}
+                      </span>
                     </button>
-                    <button
-                      onClick={() => openEdit(offer)}
-                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(offer)}
-                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+
+                    {/* Edit + Delete */}
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => openEdit(offer)}
+                        title="এডিট করুন"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(offer)}
+                        title="ডিলিট করুন"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -257,12 +341,21 @@ export default function OffersContent() {
           })}
         </div>
       ) : (
-        <div className="flex flex-col items-center rounded-2xl border border-border bg-card px-6 py-16 text-center shadow-sm">
+        <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-card px-6 py-20 text-center shadow-sm">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary">
             <Tag className="h-8 w-8 text-primary" />
           </div>
-          <p className="mt-4 text-base font-medium text-foreground">কোনো অফার নেই</p>
-          <p className="mt-1 text-sm text-muted-foreground">প্রথম অফার যোগ করুন</p>
+          <p className="mt-4 text-base font-semibold text-foreground">কোনো অফার নেই</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            প্রথম ডিল বা কম্বো অফার যোগ করুন
+          </p>
+          <button
+            onClick={openAdd}
+            className="mt-5 flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
+          >
+            <Plus className="h-4 w-4" />
+            অফার যোগ করুন
+          </button>
         </div>
       )}
 

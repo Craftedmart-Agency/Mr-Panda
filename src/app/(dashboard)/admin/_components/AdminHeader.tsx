@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import OrderNotification from "./OrderNotification";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -167,9 +168,7 @@ export default function AdminHeader() {
           >
             {/* Logo */}
             <div className="flex h-16 items-center gap-3 border-b border-border px-5">
-              <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-primary/10 text-lg">
-                🐼
-              </div>
+              <Image src="/logo.svg" alt="MR. PANDA" width={36} height={36} className="rounded-xl" />
               <span className="font-bold text-foreground">MR. PANDA</span>
             </div>
 
