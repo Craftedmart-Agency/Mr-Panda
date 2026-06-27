@@ -133,7 +133,7 @@ export default function OrderNotification() {
           totalAmount: data.totalAmount,
           time,
           read: false,
-          type: "new-order",
+          type: "new-order" as const,
         },
         ...prev,
       ].slice(0, 20));
@@ -155,7 +155,7 @@ export default function OrderNotification() {
           totalAmount: 0,
           time: new Date().toLocaleTimeString("bn-BD"),
           read: false,
-          type: "order-updated",
+          type: "order-updated" as const,
           status: data.status,
         },
         ...prev,
