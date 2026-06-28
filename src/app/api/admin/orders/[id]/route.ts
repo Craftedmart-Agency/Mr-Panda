@@ -29,6 +29,15 @@ export async function PATCH(
       select: { id: true, status: true },
     });
 
+    const notification = await prisma.notification.create({
+      data: {
+        type: "order-updated",
+        title: "অর্ডার আপডেট হয়েছে",
+        message: `অর্ডার #${id.slice(-8).toUpperCase()} → ${status}`,
+        orderId: id,
+      },
+    });
+
     await pusherServer.trigger(`order-${id}`, "status-updated", {
       orderId: id,
       status,
@@ -37,6 +46,7 @@ export async function PATCH(
     await pusherServer.trigger("admin-orders", "order-updated", {
       orderId: id,
       status,
+      notificationId: notification.id,
     });
 
     return NextResponse.json({ order });

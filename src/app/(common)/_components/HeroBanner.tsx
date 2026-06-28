@@ -4,7 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function HeroBanner() {
   return (
-    <section className="relative overflow-hidden bg-background pt-20 lg:pt-24">
+    <section className="relative overflow-hidden bg-background pt-20 lg:pt-28">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-secondary/70 via-background to-secondary/40" />
       <div className="absolute -left-20 top-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
@@ -61,7 +61,7 @@ export default function HeroBanner() {
       <div className="pointer-events-none absolute left-[45%] top-[8%] h-2 w-2 rounded-full bg-primary/50" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
-        <div className="grid grid-cols-1 items-center gap-8 pb-12 pt-4 sm:min-h-[calc(100vh-80px)] sm:grid-cols-2 sm:gap-8 sm:py-14 lg:min-h-0 lg:gap-12 lg:py-20">
+        <div className="grid grid-cols-1 items-center gap-6 pb-10 pt-4 sm:min-h-[calc(100vh-80px)] sm:grid-cols-2 sm:gap-8 sm:py-12 lg:min-h-[calc(100vh-112px)] lg:gap-12 lg:py-20">
           {/* LEFT CONTENT — mobile e PORE (order-2), desktop e age (order-1) */}
           <div className="order-2 text-center sm:order-1 sm:text-left">
             {/* Badge */}

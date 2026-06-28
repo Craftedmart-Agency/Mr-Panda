@@ -52,7 +52,7 @@ export default function CheckoutContent() {
 
     if (!user) {
       toast.error("অর্ডার করতে লগইন করুন");
-      router.push("/login");
+      router.push("/login?redirect=/checkout");
       return;
     }
 
