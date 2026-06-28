@@ -87,7 +87,7 @@ export default function FoodCard({
           </div>
 
           {/* Cart Button */}
-          <div className="w-full mt-auto z-10 flex justify-end relative top-2 right-2 border border-2 ">
+          <div className="w-full mt-auto z-10 flex justify-end relative top-2 right-2">
             <button
               onClick={handleAddToCart}
               className="flex items-center gap-2 rounded-xl bg-[#E64A79] px-4 py-3 text-[14px] font-bold text-white shadow-md shadow-pink-200 transition-all duration-200 hover:bg-[#D13D6A] hover:shadow-lg active:scale-95 cursor-pointer"
