@@ -1,18 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Send, Share2, AtSign } from "lucide-react";
+import { Send, Share2, AtSign, Phone, Mail, MapPin } from "lucide-react";
+
 const navigation = [
   { label: "খাবার", href: "/recipe" },
   { label: "আমাদের সম্পর্কে", href: "/about" },
-  { label: "যোগাযোগ", href: "/contact" },
   { label: "স্পেশাল অফার", href: "/special-offer" },
 ];
 
-const dishes = [
-  { label: "ফিশ অ্যান্ড ভেজি", href: "/recipe" },
-  { label: "টোফু চিলি", href: "/recipe" },
-  { label: "এগ অ্যান্ড কিউকাম্বার", href: "/recipe" },
-  { label: "লুম্পিয়া উইথ সস", href: "/recipe" },
+const contact = [
+  { icon: Phone, label: "+৮৮০ ১৮৩৫৪৭৪৩৯৭", href: "tel:+8801835474397" },
+  { icon: Mail, label: "support@mrpanda.com", href: "mailto:support@mrpanda.com" },
+  { icon: MapPin, label: "আগ্রাবাদ কমার্শিয়াল এলাকা, চট্টগ্রাম", href: null },
 ];
 
 const socials = [
@@ -28,7 +27,6 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand + Opening Hours */}
           <div className="lg:col-span-5">
-            {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <Image src="/logo.svg" alt="মি. পান্ডা" width={90} height={90} />
               <span className="text-lg font-bold text-foreground">মি. পান্ডা</span>
@@ -79,22 +77,30 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Dishes */}
+          {/* Contact */}
           <div className="lg:col-span-3">
             <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">
-              খাবার
+              যোগাযোগ
             </h4>
-            <ul className="mt-5 space-y-3">
-              {dishes.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                  >
+            <ul className="mt-5 space-y-4">
+              {contact.map((item) =>
+                item.href ? (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className="flex items-start gap-3 text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      {item.label}
+                    </a>
+                  </li>
+                ) : (
+                  <li key={item.label} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     {item.label}
-                  </Link>
-                </li>
-              ))}
+                  </li>
+                )
+              )}
             </ul>
           </div>
 
