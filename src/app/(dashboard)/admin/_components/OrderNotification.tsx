@@ -172,7 +172,6 @@ export default function OrderNotification() {
       channel.unbind("order-updated", handleOrderUpdated);
       pusherClient.unsubscribe("admin-orders");
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Cleanup on unmount
