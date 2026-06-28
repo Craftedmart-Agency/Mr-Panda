@@ -31,11 +31,10 @@ export default function FoodCard({
 
   return (
     <div className="relative w-full max-w-[400px] overflow-hidden rounded-[24px] border border-pink-100 bg-[#FFF5F6] p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      
       {/* Top Banner / Category Section */}
       <div className="relative z-10 flex justify-between items-start">
         {category && (
-          <div className="flex items-center gap-1.5 rounded-full bg-[#E64A79] opacity-80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">
+          <div className="flex items-center gap-1.5 rounded-full bg-black opacity-80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">
             <span className="text-[12px]">🍲</span>
             {category}
           </div>
@@ -44,19 +43,12 @@ export default function FoodCard({
 
       {/* Main Layout Area */}
       <div className="relative mt-2 grid grid-cols-12 gap-2 min-h-[220px] mb-4">
-        
         {/* Left Side: Content & Pricing */}
-        <div className="col-span-6 z-10 flex flex-col justify-between pt-4">
+        <div className="col-span-6 z-10 flex flex-col justify-end pt-4">
           <div>
-            <h3 className="text-[24px] font-extrabold leading-tight text-[#3A231C] font-serif break-words">
+            <h3 className="text-[18px] font-extrabold leading-tight text-[#3A231C] font-serif opacity-80">
               {name}
             </h3>
-            
-            {description && (
-              <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-[#6E5D58]">
-                {description}
-              </p>
-            )}
           </div>
 
           <div className="mt-4">
@@ -71,7 +63,6 @@ export default function FoodCard({
 
         {/* Right Side: Image and Add to Cart Button */}
         <div className="col-span-6 flex flex-col justify-between items-end relative">
-          
           {/* FIXED: Added explicit height/width wrapper with absolute container */}
           <div className="absolute -top-6 -right-6">
             <div className="relative w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] rounded-full overflow-hidden bg-orange-50 shadow-inner border-[4px] border-white">
@@ -90,7 +81,7 @@ export default function FoodCard({
           <div className="w-full mt-auto z-10 flex justify-end relative top-2 right-2">
             <button
               onClick={handleAddToCart}
-              className="flex items-center gap-2 rounded-xl bg-[#E64A79] px-4 py-3 text-[14px] font-bold text-white shadow-md shadow-pink-200 transition-all duration-200 hover:bg-[#D13D6A] hover:shadow-lg active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 rounded-xl bg-[#E64A79] px-3 py-2 text-[14px] font-bold text-white shadow-md shadow-pink-200 transition-all duration-200 hover:bg-[#D13D6A] hover:shadow-lg active:scale-95 cursor-pointer"
             >
               <ShoppingCart className="h-4 w-4" />
               যোগ করুন
@@ -105,16 +96,12 @@ export default function FoodCard({
           <Leaf className="w-3.5 h-3.5 text-[#E64A79]" />
           Fresh Ingredients
         </div>
-        <div className="h-3 w-[1px] bg-pink-200" />
-        <div className="flex items-center gap-1">
-          <Flame className="w-3.5 h-3.5 text-[#E64A79]" />
-          Authentic Flavor
-        </div>
-        <div className="h-3 w-[1px] bg-pink-200" />
-        <div className="flex items-center gap-1">
-          <Heart className="w-3.5 h-3.5 text-[#E64A79]" />
-          Made With Love
-        </div>
+        <div className="h-6 mr-4 w-[2px] bg-pink-200" />
+        {description && (
+          <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-[#9c5742]">
+            {description}
+          </p>
+        )}
       </div>
     </div>
   );
