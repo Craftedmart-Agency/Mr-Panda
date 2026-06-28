@@ -16,18 +16,22 @@ export async function GET() {
     const orders = orderIds.length
       ? await prisma.order.findMany({
           where: { id: { in: orderIds } },
-          select: { id: true, status: true },
+          select: { id: true, status: true, totalAmount: true },
         })
       : [];
 
-    const statusMap = orders.reduce<Record<string, string>>((acc, order) => {
-      acc[order.id] = order.status;
-      return acc;
-    }, {});
+    const orderDataMap = orders.reduce<Record<string, { status: string; totalAmount: number }>>(
+      (acc, order) => {
+        acc[order.id] = { status: order.status, totalAmount: order.totalAmount };
+        return acc;
+      },
+      {}
+    );
 
     const enrichedNotifications = notifications.map((notif) => ({
       ...notif,
-      orderStatus: notif.orderId ? statusMap[notif.orderId] ?? null : null,
+      orderStatus: notif.orderId ? (orderDataMap[notif.orderId]?.status ?? null) : null,
+      orderTotalAmount: notif.orderId ? (orderDataMap[notif.orderId]?.totalAmount ?? null) : null,
     }));
 
     const unreadCount = await prisma.notification.count({

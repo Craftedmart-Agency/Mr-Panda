@@ -3,13 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { loginWithEmail, loginWithGoogle } from "@/lib/firebase/auth";
 import { toast } from "sonner";
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function LoginForm() {
     try {
       await loginWithEmail(form.email, form.password);
       toast.success("সফলভাবে লগইন হয়েছে!");
-      router.push("/");
+      router.push(redirectTo);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       if (err.message === "USER_BANNED" || err.code === "auth/user-banned") {
@@ -45,7 +47,7 @@ export default function LoginForm() {
     try {
       await loginWithGoogle();
       toast.success("সফলভাবে লগইন হয়েছে!");
-      router.push("/");
+      router.push(redirectTo);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       if (err.message === "USER_BANNED" || err.code === "auth/user-banned") {

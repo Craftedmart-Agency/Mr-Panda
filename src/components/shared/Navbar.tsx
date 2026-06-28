@@ -87,11 +87,11 @@ export default function Navbar() {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 w-full border-b border-border bg-background">
-      <nav className="flex w-full items-center justify-between px-6 py-4 lg:px-12">
+      <nav className="flex w-full items-center justify-between px-4 py-3 sm:px-6 lg:px-12 lg:py-4">
         {/* Left — Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="মি. পান্ডা" width={80} height={80} />
-          <span className="text-lg font-bold tracking-tight text-foreground">মি. পান্ডা</span>
+          <Image src="/logo.svg" alt="মি. পান্ডা" width={80} height={80} className="h-14 w-auto lg:h-20" />
+          <span className="text-base font-bold tracking-tight text-foreground lg:text-lg">মি. পান্ডা</span>
         </Link>
 
         {/* Center — Nav Links + Phone */}
@@ -113,11 +113,11 @@ export default function Navbar() {
             স্পেশাল অফার
           </Link>
           <a
-            href="tel:+923351263561"
+            href="tel:+8801835474397"
             className="flex items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary"
           >
             <Phone className="h-4 w-4 text-primary" />
-            <span className="hidden xl:inline">+৯২৩৩৫১২৬৩৫৬১</span>
+            <span className="hidden xl:inline">+৮৮০১৮৩৫৪৭৪৩৯৭</span>
           </a>
         </div>
 
@@ -304,7 +304,7 @@ export default function Navbar() {
         {/* Drawer Links */}
         <div className="flex flex-col gap-1 px-5 py-6">
           <a
-            href="tel:+923351263561"
+            href="tel:+8801835474397"
             className="rounded-lg px-4 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary flex items-center gap-2"
           >
             <Phone className="h-4 w-4 text-primary" />

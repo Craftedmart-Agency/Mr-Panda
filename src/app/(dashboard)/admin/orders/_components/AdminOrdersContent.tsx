@@ -1,7 +1,7 @@
 "use client";
 
 import { pusherClient } from "@/lib/pusher/client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ShoppingBag,
@@ -75,7 +75,7 @@ export default function AdminOrdersContent() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Order | null>(null);
-  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
+  const currentOrderIdRef = useRef<string | null>(null);
   const [updating, setUpdating] = useState(false);
 
 
@@ -116,14 +116,14 @@ export default function AdminOrdersContent() {
   const orderId = searchParams?.get("orderId") ?? null;
 
   useEffect(() => {
-    if (!orderId || orderId === currentOrderId) return;
+    if (!orderId || orderId === currentOrderIdRef.current) return;
 
     const selectedOrder = orders.find((order) => order.id === orderId);
     if (selectedOrder) {
       setSelected(selectedOrder);
-      setCurrentOrderId(orderId);
+      currentOrderIdRef.current = orderId;
     }
-  }, [orders, orderId, currentOrderId]);
+  }, [orders, orderId]);
 
   const handleStatusUpdate = async (orderId: string, status: string) => {
     setUpdating(true);
@@ -528,7 +528,7 @@ export default function AdminOrdersContent() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
           onClick={() => {
             setSelected(null);
-            setCurrentOrderId(null);
+            currentOrderIdRef.current = null;
             router.replace("/admin/orders", { scroll: false });
           }}
         >
@@ -556,7 +556,7 @@ export default function AdminOrdersContent() {
                 <button
                   onClick={() => {
                     setSelected(null);
-                    setCurrentOrderId(null);
+                    currentOrderIdRef.current = null;
                     router.replace("/admin/orders", { scroll: false });
                   }}
                   className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg hover:bg-secondary"
@@ -579,7 +579,7 @@ export default function AdminOrdersContent() {
                 {selected.deliveryAddress}
               </div>
               {selected.note && (
-                <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-300">
+                <div className="mt-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-foreground">
                   <span className="font-semibold">নির্দেশনা: </span>{selected.note}
                 </div>
               )}

@@ -24,31 +24,8 @@ interface Notification {
 
 export default function OrderNotification() {
   const router = useRouter();
-  const NOTIFICATION_STORAGE_KEY = "admin-order-notifications";
 
-  const [notifications, setNotifications] = useState<Notification[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const saved = window.localStorage.getItem(NOTIFICATION_STORAGE_KEY);
-      if (!saved) return [];
-      const parsed = JSON.parse(saved) as unknown;
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((item): item is Notification => {
-        if (typeof item !== "object" || item === null) return false;
-        const c = item as Record<string, unknown>;
-        return (
-          typeof c.id === "string" &&
-          typeof c.orderId === "string" &&
-          typeof c.totalAmount === "number" &&
-          typeof c.time === "string" &&
-          typeof c.read === "boolean" &&
-          (c.type === "new-order" || c.type === "order-updated")
-        );
-      });
-    } catch {
-      return [];
-    }
-  });
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
   const [processing, setProcessing] = useState(false);
@@ -60,14 +37,34 @@ export default function OrderNotification() {
 
   const currentPending = pendingOrders[0] ?? null;
 
-  // Persist notifications
+  // DB থেকে notifications load
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(notifications));
-      }
-    } catch {}
-  }, [notifications]);
+    fetch("/api/notifications")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!Array.isArray(data.notifications)) return;
+        setNotifications(
+          data.notifications.map((n: {
+            id: string;
+            type: string;
+            orderId: string | null;
+            isRead: boolean;
+            createdAt: string;
+            orderStatus: string | null;
+            orderTotalAmount: number | null;
+          }) => ({
+            id: n.id,
+            orderId: n.orderId ?? "",
+            totalAmount: n.orderTotalAmount ?? 0,
+            time: new Date(n.createdAt).toLocaleTimeString("bn-BD"),
+            read: n.isRead,
+            type: (n.type === "new-order" || n.type === "order-updated") ? n.type : "new-order",
+            status: n.orderStatus ?? undefined,
+          }))
+        );
+      })
+      .catch(() => {});
+  }, []);
 
   // Audio setup
   useEffect(() => {
@@ -80,10 +77,15 @@ export default function OrderNotification() {
   // Autoplay unlock on first interaction
   useEffect(() => {
     const unlock = () => {
-      audioRef.current?.play().then(() => {
-        audioRef.current?.pause();
-        if (audioRef.current) audioRef.current.currentTime = 0;
-      }).catch(() => {});
+      const audio = audioRef.current;
+      if (audio) {
+        audio.volume = 0;
+        audio.play().then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.volume = 1;
+        }).catch(() => {});
+      }
       window.removeEventListener("pointerdown", unlock);
     };
     window.addEventListener("pointerdown", unlock);
@@ -248,6 +250,7 @@ export default function OrderNotification() {
     setOpen((prev) => !prev);
     if (!open) {
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      fetch("/api/notifications", { method: "PATCH" }).catch(() => {});
     }
   };
 
